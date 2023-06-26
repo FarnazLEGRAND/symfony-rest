@@ -47,6 +47,6 @@ ______________________
              "released":"2020-01-01",
              "length":120
             } 
-  
+  __________________________
 
- 
+ * Faire le GenreController en utilisant le GenreRepository
