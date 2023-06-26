@@ -27,3 +27,26 @@ _______________________
 	
 6. Rajouter une nouvelle route /api/movie/{id} mais cette fois ci en method DELETE et dedans on supprime le movie
 
+______________________
+ 
+    ** Faire le POST à la main
+	
+1. Créer une nouvelle route sur /api/movie en POST, dans les arguments de la route, ajouter le Request $request
+	
+2. Utiliser la méthode ->toArray() de la $request pour récupérer les données du body sous forme de tableau associatif (par exemple si on stock ça dans une variable data on pourra accéder à $data['title']
+	
+3. Faire une instance de movie et dans le constructeur mettre les données du toArray aux bons emplacement, sachant que pour le "released" il faudra faire un new DateTime
+	
+4. Donner cette instance au persist du repo et faire un return de json() avec l'instance en argument et le status 201 (created)
+
+
+         *  à mettre dans le body de la request POST avec Thunder Client
+            {
+             "title":"mon film",
+             "resume":"le résumé",
+             "released":"2020-01-01",
+             "length":120
+            } 
+  
+
+ 
