@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/movie')]
 class MovieController extends AbstractController
@@ -48,10 +49,20 @@ class MovieController extends AbstractController
 
 //route sur /api/movie en POST (chon oun bala adres ra goftam inja faghat method ra elam mikonam) et  Utiliser la méthode ->toArray()
     #[Route(methods: 'POST')]
-    public function add(Request $request)
+    // requet HTTP
+ 
+        // corecte manuelle
+        // public function add(Request $request)
+        // {
+        // $data = $request->toArray();
+        // $movie = new Movie($data['title'], $data['resume'],new\DateTime ($data['released']), $data['length']);
+    //    fin de corect
+    
+    // version Symfony
+    public function add(Request $request, SerializerInterface $serializer)
     {
-        $data = $request->toArray();
-        $movie = new Movie($data['title'], $data['resume'],new\DateTime ($data['released']), $data['length']);
+    $movie= $serializer->deserialize($request->getContent(), Movie::class,'json');
+    // fin version symfony remplaser version manuell
         $this->repo->persist($movie);
         return $this->json($movie, 201);
     }
