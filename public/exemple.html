@@ -8,9 +8,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script>
+        document.querySelector('button').addEventListener('click',()=>{
         fetch('http://localhost:8000/apli/movie')
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {
+                for(const item of data){
+                document.querySelector('#tarhet').innerHTML+= `<p>${item.title}</p>`
+            }
+        
+        });
     </script>
 </head>
 
