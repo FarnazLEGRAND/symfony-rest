@@ -11,8 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class MovieController extends AbstractController
 {
 
-    public function __construct(private MovieRepository $repo) {}
-
+    public function __construct(private MovieRepository $repo)
+    {
+    }
 
     #[Route(methods: 'GET')]
     public function all(): JsonResponse
@@ -20,22 +21,22 @@ class MovieController extends AbstractController
         return $this->json($this->repo->findAll());
     }
 
-    #[Route('/{id}',methods: 'GET')]
+    #[Route('/{id}', methods: 'GET')]
     public function one(int $id): JsonResponse
     {
         $movie = $this->repo->findById($id);
-        if($movie == null) {
+        if ($movie == null) {
             return $this->json('Resource Not found', 404);
         }
 
         return $this->json($movie);
     }
 
-    #[Route('/{id}',methods: 'DELETE')]
+    #[Route('/{id}', methods: 'DELETE')]
     public function delete(int $id): JsonResponse
     {
         $movie = $this->repo->findById($id);
-        if($movie == null) {
+        if ($movie == null) {
             return $this->json('Resource Not found', 404);
         }
         $this->repo->delete($id);
@@ -54,7 +55,7 @@ class MovieController extends AbstractController
 //     public function all()
 //     {
 //         return $this->json($this->repo->findAll());
-        
+
 //     }
 
 //     #[Route('/{id}', methods: 'GET')]
