@@ -57,8 +57,9 @@ class MovieController extends AbstractController
         // $data = $request->toArray();
         // $movie = new Movie($data['title'], $data['resume'],new\DateTime ($data['released']), $data['length']);
     //    fin de corect
-    
+
     // version Symfony
+    
     public function add(Request $request, SerializerInterface $serializer)
     {
     $movie= $serializer->deserialize($request->getContent(), Movie::class,'json');
@@ -66,8 +67,20 @@ class MovieController extends AbstractController
         $this->repo->persist($movie);
         return $this->json($movie, 201);
     }
+// method mis a jour un donner avec patch:mis ajour par ligne on a besoin son ID PATCH= melange findbyid et post
+#[Route('/{id}' ,methods: 'PATCH')]
+public function update(int $id, Request $request, SerializerInterface $serializer)
+{
+    $movie=$this->repo->findById($id);
+    if
+$movie= $serializer->deserialize($request->getContent(), Movie::class,'json');
+    $this->repo->persist($movie);
+    return $this->json($movie, 201);
+}
 
 }
+
+
 
 
 
