@@ -55,7 +55,7 @@ class MovieController extends AbstractController
         // public function add(Request $request)
         // {
         // $data = $request->toArray();
-        // $movie = new Movie($data['title'], $data['resume'],new\DateTime ($data['released']), $data['length']);
+        // $movie = new Movie($data['title'], $data['resume'],new\DateTime ($data['released']), $data['duration']);
     //    fin de corect
 
     // version Symfony

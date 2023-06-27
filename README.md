@@ -8,7 +8,7 @@ Première API REST en symfony
 4. `symfony server:start`
 
 _______________________
-*  Créer un database.sql avec une entité et un repository pour : un Movie avec un title en varchar, un resume en text, un released en Date et un length en int
+*  Créer un database.sql avec une entité et un repository pour : un Movie avec un title en varchar, un resume en text, un released en Date et un duration en int
 
 _______________________
     ** Premier contrôleur Rest :
@@ -45,8 +45,13 @@ ______________________
              "title":"mon film",
              "resume":"le résumé",
              "released":"2020-01-01",
-             "length":120
+             "duration":120
             } 
   __________________________
 
- * Faire le GenreController en utilisant le GenreRepository
+* Faire le GenreController en utilisant le GenreRepository
+
+     attention pour cela j'ai besoin de : ON DELETE CASCADE
+     Foreign Key (id_movie) REFERENCES movie(id) ON DELETE CASCADE,
+     Foreign Key (id_genre) REFERENCES genre(id) ON DELETE CASCADE
+  __________________________

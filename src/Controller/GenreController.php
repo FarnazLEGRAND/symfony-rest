@@ -6,6 +6,7 @@ use App\Entity\Genre;
 use App\Entity\Movie;
 use App\Repository\GenreRepository;
 use App\Repository\MovieRepository;
+use Doctrine\ORM\Query\Expr\Select;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,3 +81,4 @@ public function update(int $id, Request $request, SerializerInterface $serialize
 
 
 
+    
