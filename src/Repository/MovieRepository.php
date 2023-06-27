@@ -48,7 +48,7 @@ class MovieRepository
              */
             $previousMovie = null;
             foreach ($query->fetchAll() as $line) {
-                if (!empty($previousMovie) && $previousMovie->getId() != $line['movie_id']) {
+                if (empty($previousMovie) || $previousMovie->getId() != $line['movie_id']) {
                     $previousMovie = new Movie($line["title"], $line["resume"], new DateTime($line["released"]), $line['duration'], $line["movie_id"]);
                     $list[] = $previousMovie;
                 }

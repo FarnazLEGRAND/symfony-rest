@@ -72,3 +72,8 @@ __________________________
 
  _______________________
  * Méthode alternative pour avoir le même résultat mais juste un peu moins optimisée : Créer une méthode findByMovie(int $movieId) dans le GenreRepository, et dans le MovieRepository::findAll() faire en sorte de lancer le findByMovie dans le foreach pour chaque film
+
+ ________________________
+ * Dans le GenreController, rajouter une route sur localhost:8000/api/genre/movie/{id} qui utilisera le findByMovie du GenreRepository pour renvoyer les genres associés à un film donné
+
+ 

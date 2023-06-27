@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/genre')]
-class MovieController extends AbstractController
+class GenreController extends AbstractController
 {
 
     public function __construct(private GenreRepository $repo)
@@ -50,35 +50,38 @@ class MovieController extends AbstractController
         return $this->json(null, 204);
     }
 
-//route sur /api/movie en POST (chon oun bala adres ra goftam inja faghat method ra elam mikonam) et  Utiliser la méthode ->toArray()
+    //route sur /api/movie en POST (chon oun bala adres ra goftam inja faghat method ra elam mikonam) et  Utiliser la méthode ->toArray()
     #[Route(methods: 'POST')]
     public function add(Request $request, SerializerInterface $serializer)
     {
-    $genre= $serializer->deserialize($request->getContent(), Genre::class,'json');
+        $genre = $serializer->deserialize($request->getContent(), Genre::class, 'json');
         $this->repo->persist($genre);
         return $this->json($genre, 201);
     }
 
 
-#[Route('/{id}', methods: 'PATCH')]
-public function update(int $id, Request $request, SerializerInterface $serializer) {
-    
-    $genre = $this->repo->findById($id);
-    if($genre == null) {
-        return $this->json('Resource Not found', 404);
+    #[Route('/{id}', methods: 'PATCH')]
+    public function update(int $id, Request $request, SerializerInterface $serializer)
+    {
+
+        $genre = $this->repo->findById($id);
+        if ($genre == null) {
+            return $this->json('Resource Not found', 404);
+        }
+
+        $serializer->deserialize($request->getContent(), Genre::class, 'json', [
+            'object_to_populate' => $genre
+        ]);
+        $this->repo->update($genre);
+
+        return $this->json($genre);
     }
 
-    $serializer->deserialize($request->getContent(), Genre::class, 'json',[
-        'object_to_populate' => $genre
-    ]);
-    $this->repo->update($genre);
+    #[Route('/movie/{id}', methods: 'GET')]
+    public function movieGenres(int $id): JsonResponse
+    {
 
-    return $this->json($genre);
+        $genres = $this->repo->findByMovie($id);
+        return $this->json($genres);
+    }
 }
-}
-
-
-
-
-
-    
