@@ -68,18 +68,22 @@ class MovieController extends AbstractController
         return $this->json($movie, 201);
     }
 // method mis a jour un donner avec patch:mis ajour par ligne on a besoin son ID PATCH= melange findbyid et post
-#[Route('/{id}' ,methods: 'PATCH')]
-public function update(int $id, Request $request, SerializerInterface $serializer)
-{
-    $movie=$this->repo->findById($id);
-    if
-$movie= $serializer->deserialize($request->getContent(), Movie::class,'json');
-    $this->repo->persist($movie);
-    return $this->json($movie, 201);
-}
+#[Route('/{id}', methods: 'PATCH')]
+public function update(int $id, Request $request, SerializerInterface $serializer) {
+    
+    $movie = $this->repo->findById($id);
+    if($movie == null) {
+        return $this->json('Resource Not found', 404);
+    }
 
-}
+    $serializer->deserialize($request->getContent(), Movie::class, 'json',[
+        'object_to_populate' => $movie
+    ]);
+    $this->repo->update($movie);
 
+    return $this->json($movie);
+}
+}
 
 
 

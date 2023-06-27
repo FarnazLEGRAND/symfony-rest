@@ -21,8 +21,9 @@ CREATE TABLE genre_movie (
     id_movie INT,
     id_genre INT,
     PRIMARY KEY (id_movie,id_genre),
-    Foreign Key (id_movie) REFERENCES movie(id),
-    Foreign Key (id_genre) REFERENCES genre(id)
+    -- ON DELETE CASCADE pour quandsje faire delete un genre on delete en même temps chez genre_movie...
+    Foreign Key (id_movie) REFERENCES movie(id) ON DELETE CASCADE,
+    Foreign Key (id_genre) REFERENCES genre(id) ON DELETE CASCADE
 );
 
 INSERT INTO movie (title,resume,released,length) VALUES

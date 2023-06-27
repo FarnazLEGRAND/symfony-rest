@@ -1,100 +1,82 @@
 <?php
 
-namespace App\Repository;
+namespace App\Controller;
 
 use App\Entity\Genre;
-use DateTime;
+use App\Entity\Movie;
+use App\Repository\GenreRepository;
+use App\Repository\MovieRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
-class GenreRepository
+#[Route('/api/genre')]
+class MovieController extends AbstractController
 {
 
-    /**
-     * Méthode qui va faire une requête pour récupérer tous les genres de la base de données puis qui va boucler
-     * sur les résultat de la requête pour transformer chaque ligne de résultat en instance de la classe Genre
-     * @return Genre[] La liste des genres contenus dans la base de données;
-     */
-    public function findAll(): array
+    public function __construct(private GenreRepository $repo)
     {
-        $list = [];
-        $connection = Database::getConnection();
+    }
 
-        $query = $connection->prepare("SELECT * FROM genre");
+    #[Route(methods: 'GET')]
+    public function all(): JsonResponse
+    {
+        return $this->json($this->repo->findAll());
+    }
 
-        $query->execute();
-
-        foreach ($query->fetchAll() as $line) {
-            $list[] = new Genre($line["label"], $line["id"]);
+    #[Route('/{id}', methods: 'GET')]
+    public function one(int $id): JsonResponse
+    {
+        $genre = $this->repo->findById($id);
+        if ($genre == null) {
+            return $this->json('Resource Not found', 404);
         }
 
-        return $list;
+        return $this->json($genre);
     }
 
-    /**
-     * Méthode permettant de récupérer un genre spécifique en se basant sur son id
-     * Si aucun genre n'existe pour cet id dans la base de données, on renvoie null
-     * 
-     * @param $id l'id du genre que l'on souhaite récupérer
-     */
-    public function findById(int $id):?Genre {
-
-        $connection = Database::getConnection();
-
-        $query = $connection->prepare("SELECT * FROM genre WHERE id=:id ");
-        $query->bindValue(":id", $id);
-        $query->execute();
-
-        foreach ($query->fetchAll() as $line) {
-            return new Genre($line["label"], $line["id"]);
+    #[Route('/{id}', methods: 'DELETE')]
+    public function delete(int $id): JsonResponse
+    {
+        $movie = $this->repo->findById($id);
+        if ($movie == null) {
+            return $this->json('Resource Not found', 404);
         }
-        return null;
+        $this->repo->delete($id);
 
+        return $this->json(null, 204);
     }
 
-    /**
-     * Méthode qui va prendre une instance de Genre en argument et va la transformer en requête INSERT INTO pour 
-     * la faire persister en base de données
-     * @param $genre Le genre que l'on souhaite faire persister (qui n'aura donc pas d'id au début de la méthode, car pas encore dans la bdd)
-     */
-    public function persist(Genre $genre) {
-        $connection = Database::getConnection();
-
-        $query = $connection->prepare("INSERT INTO genre (label) VALUES (:label)");
-        $query->bindValue(':label', $genre->getLabel());
-        
-
-        $query->execute();
-
-        //On assigne l'id auto incrémenté à l'instance de genre afin que l'objet soit complet après le persist
-        $genre->setId($connection->lastInsertId());
+//route sur /api/movie en POST (chon oun bala adres ra goftam inja faghat method ra elam mikonam) et  Utiliser la méthode ->toArray()
+    #[Route(methods: 'POST')]
+    public function add(Request $request, SerializerInterface $serializer)
+    {
+    $genre= $serializer->deserialize($request->getContent(), Genre::class,'json');
+        $this->repo->persist($genre);
+        return $this->json($genre, 201);
     }
 
-    /**
-     * Méthode qui permet de supprimer un genre de la base de données en se basant sur son id
-     * 
-     * @param $id l'id du genre à supprimer
-     */
-    public function delete(int $id) {
 
-        $connection = Database::getConnection();
-
-        $query = $connection->prepare("DELETE FROM genre WHERE id=:id");
-        $query->bindValue(":id", $id);
-        $query->execute();
+#[Route('/{id}', methods: 'PATCH')]
+public function update(int $id, Request $request, SerializerInterface $serializer) {
+    
+    $genre = $this->repo->findById($id);
+    if($genre == null) {
+        return $this->json('Resource Not found', 404);
     }
 
-    /**
-     * Méthode pour mettre un jour un genre existant en base de données
-     * 
-     * @param Genre $genre Le genre à mettre à jour. Il doit avoir un id correspondant à une ligne de la bdd
-     */
-    public function update(Genre $genre) {
-        
-        $connection = Database::getConnection();
+    $serializer->deserialize($request->getContent(), Genre::class, 'json',[
+        'object_to_populate' => $genre
+    ]);
+    $this->repo->update($genre);
 
-        $query = $connection->prepare("UPDATE genre SET label=:label WHERE id=:id");
-        $query->bindValue(':label', $genre->getLabel());
-        $query->bindValue(":id", $genre->getId());
-
-        $query->execute();
-    }
+    return $this->json($genre);
 }
+}
+
+
+
+
+
