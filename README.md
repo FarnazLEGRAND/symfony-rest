@@ -55,3 +55,5 @@ ______________________
      Foreign Key (id_movie) REFERENCES movie(id) ON DELETE CASCADE,
      Foreign Key (id_genre) REFERENCES genre(id) ON DELETE CASCADE
   __________________________
+
+  
