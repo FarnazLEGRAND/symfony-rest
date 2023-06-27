@@ -77,6 +77,35 @@ class MovieRepository
         }
         */
 
+
+    /**
+     * @return Movie[] La liste des movies contenus dans la base de données;
+     */
+    public function findAllWithoutJoin(): array
+    {
+        $genreRepo = new GenreRepository();
+        $list = [];
+        $connection = Database::getConnection();
+
+        $query = $connection->prepare("SELECT * FROM movie");
+
+        $query->execute();
+
+        
+        foreach ($query->fetchAll() as $line) {
+            $genres = $genreRepo->findByMovie($line['id']);
+            $movie = new Movie($line["title"], $line["resume"], new DateTime($line["released"]), $line['duration'], $line["id"]);
+            $movie->setGenres($genres);
+            
+            $list[] = $movie;
+        }
+
+        return $list;
+    }
+
+
+
+
     /**
      * Méthode permettant de récupérer un produit spécifique en se basant sur son id
      * Si aucun produit n'existe pour cet id dans la base de données, on renvoie null

@@ -47,14 +47,14 @@ ______________________
              "released":"2020-01-01",
              "duration":120
             } 
-  __________________________
+__________________________
 
 * Faire le GenreController en utilisant le GenreRepository
 
      attention pour cela j'ai besoin de : ON DELETE CASCADE
      Foreign Key (id_movie) REFERENCES movie(id) ON DELETE CASCADE,
      Foreign Key (id_genre) REFERENCES genre(id) ON DELETE CASCADE
-  __________________________
+__________________________
 
     ** Récupérer les Genre avec les Movie
 
@@ -69,3 +69,6 @@ ______________________
 	* Si non, alors on va faire une instance de Movie, l'assigner à currentMovie et aussi la push dans la list. On fait ensuite un autre if pour vérifier si line[genre_id] isset, et si oui, on créer une instance de Genre qu'on met dans le addGenre du currentMovie
 	
 4. Essayer de voir comment faire la même chose pour le findById
+
+ _______________________
+ * Méthode alternative pour avoir le même résultat mais juste un peu moins optimisée : Créer une méthode findByMovie(int $movieId) dans le GenreRepository, et dans le MovieRepository::findAll() faire en sorte de lancer le findByMovie dans le foreach pour chaque film

@@ -87,6 +87,27 @@ class GenreRepository
      * 
      * @param Genre $genre Le genre à mettre à jour. Il doit avoir un id correspondant à une ligne de la bdd
      */
+
+    //  update dans le premier version sans genres!
+    // public function update(Genre $genre) {
+        
+    //     $connection = Database::getConnection();
+
+    //     $query = $connection->prepare("UPDATE genre SET label=:label WHERE id=:id");
+    //     $query->bindValue(':label', $genre->getLabel());
+    //     $query->bindValue(":id", $genre->getId());
+
+    //     $query->execute();
+    // }
+    //fin de version
+
+
+
+     /**
+     * Méthode pour mettre un jour un genre existant en base de données
+     * 
+     * @param Genre $genre Le genre à mettre à jour. Il doit avoir un id correspondant à une ligne de la bdd
+     */
     public function update(Genre $genre) {
         
         $connection = Database::getConnection();
