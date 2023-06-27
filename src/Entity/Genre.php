@@ -10,6 +10,7 @@ class Genre
         private ?int $id = null
     ) {
     }
+
     /**
      * @return 
      */

@@ -56,4 +56,16 @@ ______________________
      Foreign Key (id_genre) REFERENCES genre(id) ON DELETE CASCADE
   __________________________
 
-  
+    ** Récupérer les Genre avec les Movie
+
+1. Modifier l'entité Movie pour rajouter dedans une propriété genres de type array (et même Genre[] si on veut faire le commentaire de typage) initialisée en tableau vide (je recommande de la mettre hors du constructeur)
+	
+2. Toujours dans l'entité, générer les getters/setters puis rajouter une méthode addGenre(Genre $genre) qui va push l'argument dans la propriété $this->genres
+	
+3. Dans le MovieRepository, modifier la requête du findAll pour y mettre la requête avec double jointure en mettant un alias movie_id pour movie.id et genre_id pour genre.id puis, l'algo a faire est la suivante :
+	* Juste au dessus de la boucle, déclarer une variable currentMovie initialisée null
+	* Dans la boucle, faire un if qui vérifie est-ce que currentMovie n'est pas null et est-ce que son id correspond au line[movie_id]
+	* Si oui, alors on va faire un addGenre sur currentMovie dans lequel on va mettre une nouvelle instance de Genre (en mettant bien genre_id pour l'id)
+	* Si non, alors on va faire une instance de Movie, l'assigner à currentMovie et aussi la push dans la list. On fait ensuite un autre if pour vérifier si line[genre_id] isset, et si oui, on créer une instance de Genre qu'on met dans le addGenre du currentMovie
+	
+4. Essayer de voir comment faire la même chose pour le findById

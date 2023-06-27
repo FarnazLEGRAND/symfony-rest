@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Genre;
 use App\Entity\Movie;
 use DateTime;
 
@@ -13,21 +14,68 @@ class MovieRepository
      * sur les résultat de la requête pour transformer chaque ligne de résultat en instance de la classe Movie
      * @return Movie[] La liste des produits contenus dans la base de données;
      */
-    public function findAll(): array
-    {
-        $list = [];
-        $connection = Database::getConnection();
+    // public function findAll(): array
+    // {
+    //     $list = [];
+    //     $connection = Database::getConnection();
 
-        $query = $connection->prepare("SELECT * FROM movie");
+    //     $query = $connection->prepare("SELECT * FROM movie");
 
-        $query->execute();
+    //     $query->execute();
 
-        foreach ($query->fetchAll() as $line) {
-            $list[] = new Movie($line["title"], $line["resume"], new DateTime($line["released"]), $line['duration'], $line["id"]);
+    //     foreach ($query->fetchAll() as $line) {
+    //         $list[] = new Movie($line["title"], $line["resume"], new DateTime($line["released"]), $line['duration'], $line["id"]);
+    //     }
+
+    //     return $list;
+    // }
+
+    // modifier la requête du findAll PRESEDANT ET JE METTRE EN POSE - pour y mettre la requête avec double jointure en mettant un alias movie_id pour movie.id et genre_id pour genre.id puis, l'algo a faire est la suivante :
+
+        public function findAll(): array
+        {
+            $list = [];
+            $connection = Database::getConnection();
+    
+            $query = $connection->prepare("SELECT *, movie.id movie_id, genre.id genre_id FROM movie 
+            LEFT JOIN genre_movie ON movie.id=genre_movie.id_movie
+            LEFT JOIN genre ON genre.id=genre_movie.id_genre");
+    
+            $query->execute();
+    
+            /**
+             * @var ?Movie
+             */
+            $previousMovie = null;
+            foreach ($query->fetchAll() as $line) {
+                if (!empty($previousMovie) && $previousMovie->getId() != $line['movie_id']) {
+                    $previousMovie = new Movie($line["title"], $line["resume"], new DateTime($line["released"]), $line['duration'], $line["movie_id"]);
+                    $list[] = $previousMovie;
+                }
+                if (isset($line['genre_id'])) {
+                    $previousMovie->addGenre(new Genre($line['label'], $line['genre_id']));
+                }
+            }
+    
+            return $list;
         }
 
-        return $list;
-    }
+        /* //En inversant la condition, un peu moins lisible selon moi comme recette demander
+ $previousMovie = null;
+        foreach ($query->fetchAll() as $line) {
+            if (!empty($previousMovie) && $previousMovie->getId() == $line['movie_id']) {
+                $previousMovie->addGenre(new Genre($line['label'], $line['genre_id']));
+            } else {
+                $previousMovie = new Movie($line["title"], $line["resume"], new DateTime($line["released"]), $line['duration'], $line["movie_id"]);
+                $list[] = $previousMovie;
+
+                if (isset($line['genre_id'])) {
+                    $previousMovie->addGenre(new Genre($line['label'], $line['genre_id']));
+
+                }
+            }
+        }
+        */
 
     /**
      * Méthode permettant de récupérer un produit spécifique en se basant sur son id
@@ -104,4 +152,5 @@ class MovieRepository
 
         $query->execute();
     }
+  
 }
