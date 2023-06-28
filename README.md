@@ -76,4 +76,15 @@ __________________________
  ________________________
  * Dans le GenreController, rajouter une route sur localhost:8000/api/genre/movie/{id} qui utilisera le findByMovie du GenreRepository pour renvoyer les genres associés à un film donné
 
- 
+ ________________________
+    **Des tests. En vous "inspirant" de la méthode testGetAll faire les tests suivants :
+
+1. Vérifier que le /api/movie/id fonctionne et renvoie bien un truc qui ressemble à un film
+	
+2. Vérifier que le /api/movie/id renvoie bien un 404 quand on lui donne un id qui n'existe pas
+	
+3. Vérifier que le /api/movie en POST fonctionne quand on lui envoie un film en JSON (on pourra par exemple vérifier que la réponse contient bien un id)
+	
+4. Vérifier que le /api/movie/id en PATCH fonctionne et met bien à jour le champ qu'on lui dit de modifier
+	
+5. Vérifier qu'on a un 404 sur le PATCH aussi si on donne un truc qui existe pas
