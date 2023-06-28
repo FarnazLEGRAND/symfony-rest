@@ -88,3 +88,12 @@ __________________________
 4. Vérifier que le /api/movie/id en PATCH fonctionne et met bien à jour le champ qu'on lui dit de modifier
 	
 5. Vérifier qu'on a un 404 sur le PATCH aussi si on donne un truc qui existe pas
+
+___________________________
+    **En vous inspirant de la partie validation du post du MovieController, faire :
+
+1. La validation du Patch de MovieController (juste avant le update)
+	
+2. La validation du POST de GenreController, on veut juste que le label ne soit pas vide
+	
+3. La validation du PATCH du GenreController

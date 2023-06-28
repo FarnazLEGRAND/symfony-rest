@@ -2,10 +2,15 @@
 
 namespace App\Entity;
 
+// manuelement je vais ecrir cette adress pour validation yek test!
+use Symfony\Component\Validator\Constraints as Assert;
+
 class Genre
 {
 
     public function __construct(
+    //  Validation lable:
+        #[Assert\NotBlank]
         private string $label,
         private ?int $id = null
     ) {

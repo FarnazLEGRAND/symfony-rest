@@ -168,7 +168,8 @@ class MovieRepository
      * 
      * @param Movie $movie Le produit à mettre à jour. Il doit avoir un id correspondant à une ligne de la bdd
      */
-    public function update(Movie $movie) {
+// method batraye yek film khas
+     public function update(Movie $movie) {
         
         $connection = Database::getConnection();
 

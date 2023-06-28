@@ -3,7 +3,12 @@
 namespace App\Entity;
 
 use DateTime;
+// manuelement je vais ecrir cette adress pour validation yek test!
+use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Summary of Movie
+ */
 class Movie
 {
 
@@ -11,10 +16,22 @@ class Movie
      * @var Genre[]
      */
     private array $genres = [];
+    /**
+     * Summary of __construct
+     * @param string $title
+     * @param string $resume
+     * @param DateTime $released
+     * @param int $duration
+     * @param int|null $id
+     */
     public function __construct(
+        //  Validation Title:je vais ecrir  Assert\... pour  validation yek test! dar yek class validation aplique sur chaque chose que on choisir
+        #[Assert\NotBlank]
         private string $title,
         private string $resume,
         private DateTime $released,
+     //  Validation dure de film sois positive:
+        #[Assert\Positive]
         private int $duration,
         private ?int $id = null
     ) {}

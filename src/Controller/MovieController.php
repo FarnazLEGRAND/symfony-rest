@@ -9,7 +9,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+// validation; 
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+
+/**
+ * Une API REST est une manière d'interagir avec les données d'un serveur en utilisant des requêtes HTTP
+ * L'idée est pour le serveur d'exposer des routes qui permettront à des clients de manipuler les donnéees stockées pour des
+ */
 #[Route('/api/movie')]
 class MovieController extends AbstractController
 {
@@ -47,42 +54,63 @@ class MovieController extends AbstractController
         return $this->json(null, 204);
     }
 
-//route sur /api/movie en POST (chon oun bala adres ra goftam inja faghat method ra elam mikonam) et  Utiliser la méthode ->toArray()
+    //route sur /api/movie en POST (chon oun bala adres ra goftam inja faghat method ra elam mikonam) et  Utiliser la méthode ->toArray()
     #[Route(methods: 'POST')]
     // requet HTTP
- 
-        // corecte manuelle
-        // public function add(Request $request)
-        // {
-        // $data = $request->toArray();
-        // $movie = new Movie($data['title'], $data['resume'],new\DateTime ($data['released']), $data['duration']);
+
+    // corecte manuelle
+    // public function add(Request $request)
+    // {
+    // $data = $request->toArray();
+    // $movie = new Movie($data['title'], $data['resume'],new\DateTime ($data['released']), $data['duration']);
     //    fin de corect
 
     // version Symfony
-    
-    public function add(Request $request, SerializerInterface $serializer)
+// pour validator on dois appeler dans chaque fonction ici  ValidatorInterface $validator
+    public function add(Request $request, SerializerInterface $serializer, ValidatorInterface $validator)
     {
-    $movie= $serializer->deserialize($request->getContent(), Movie::class,'json');
-    // fin version symfony remplaser version manuell
+        $movie = $serializer->deserialize($request->getContent(), Movie::class, 'json');
+        //  Validation
+        $errors = $validator->validate($movie);
+        if ($errors->count() > 0) {
+            return $this->json(['errors' => $errors], 400);
+        }
+        // fin validation
+
+        // fin version symfony remplaser version manuell
         $this->repo->persist($movie);
         return $this->json($movie, 201);
     }
-// method mis a jour un donner avec patch:mis ajour par ligne on a besoin son ID PATCH= melange findbyid et post
-#[Route('/{id}', methods: 'PATCH')]
-public function update(int $id, Request $request, SerializerInterface $serializer) {
-    
-    $movie = $this->repo->findById($id);
-    if($movie == null) {
-        return $this->json('Resource Not found', 404);
-    }
+    // method mis a jour un donner avec patch:mis ajour par ligne on a besoin son ID PATCH= melange findbyid et post
+    #[Route('/{id}', methods: 'PATCH')]
+    public function update(int $id, Request $request, SerializerInterface $serializer,  ValidatorInterface $validator)
+    {
 
-    $serializer->deserialize($request->getContent(), Movie::class, 'json',[
+        $movie = $this->repo->findById($id);
+        if ($movie == null) {
+            return $this->json('Resource Not found', 404);
+        }
+// bedoune validation in ra bayad benvisam:
+        // $serializer->deserialize($request->getContent(), Movie::class, 'json', [
+        //     'object_to_populate' => $movie
+        // ]);
+// validator ajouter
+try {
+    $serializer->deserialize($request->getContent(), Movie::class, 'json', [
         'object_to_populate' => $movie
     ]);
-    $this->repo->update($movie);
-
-    return $this->json($movie);
+} catch (\Exception $error) {
+    return $this->json('Invalid body', 400);
 }
+$errors = $validator->validate($movie);
+if ($errors->count() > 0) {
+    return $this->json(['errors' => $errors], 400);
+}
+// fin validator
+        $this->repo->update($movie);
+
+        return $this->json($movie);
+    }
 }
 
 
