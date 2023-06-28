@@ -147,6 +147,12 @@ class MovieRepository
 
         //On assigne l'id auto incrémenté à l'instance de produit afin que l'objet soit complet après le persist
         $movie->setId($connection->lastInsertId());
+
+        // On peux aussi domander en persiste que il prendre function associateGenre
+        // foreach($movie->getGenres() as $genre) {
+        //     $this->associateGenre($movie->getId(), $genre->getId());
+        // }
+        // fin appele associateGenre en persiste in yek option bishtare
     }
 
     /**
@@ -183,4 +189,14 @@ class MovieRepository
         $query->execute();
     }
   
+//  assosier un movie et un genres
+public function associateGenre (int $idMovie, int $idGenre) {
+    $connection = Database:: getConnection();
+    $query = $connection->prepare ("INSERT INTO genre_movie (id_movie,id_genre) VALUES (:idMovie,:idGenre)");
+    $query->bindValue(':idMovie', $idMovie);
+    $query->bindValue(':idGenre', $idGenre);
+    $query->execute ();
+
+}
+
 }
