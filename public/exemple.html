@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exemple de client JS</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 </head>
+
 <body>
     <h1>Client d'une API Rest</h1>
     <button>Fetch</button>
     <button id="add">Add Movie</button>
     <div id="target"></div>
+
+
     <script>
         let list = [];
         function display() {
@@ -21,9 +26,11 @@
         }
         
         document.querySelector('button').addEventListener('click', () => {
+
             axios.get('http://localhost:8000/api/movie')
                 .then(response => { list = response.data; display() });
         });
+
         document.querySelector('#add').addEventListener('click', () => {
             axios.post('http://localhost:8000/api/movie', 
             {title: 'test', duration: 65, resume: 'test', released: new Date()})
@@ -31,4 +38,5 @@
         })
     </script>
 </body>
+
 </html>

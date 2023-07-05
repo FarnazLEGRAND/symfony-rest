@@ -52,7 +52,6 @@ class GenreController extends AbstractController
 
         return $this->json(null, 204);
     }
-//route sur /api/movie en POST (chon oun bala adres ra goftam inja faghat method ra elam mikonam) et  Utiliser la méthode ->toArray()
 
     #[Route(methods: 'POST')]
     public function add(Request $request, SerializerInterface $serializer, ValidatorInterface $validator) {
@@ -97,4 +96,3 @@ class GenreController extends AbstractController
         return $this->json($genre);
     }
 }
-    

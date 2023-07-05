@@ -198,5 +198,23 @@ public function associateGenre (int $idMovie, int $idGenre) {
     $query->execute ();
 
 }
+  /**
+     * Méthode de recherche dans la base de données, par title/resume/released approximatifs
+     * @return Movie[] La liste des films qui contiennent la recherche
+     */
+    public function search(string $term): array {
+        $list = [];
+        $connection= Database::getConnection();
+
+        $query = $connection->prepare('SELECT * FROM movie WHERE CONCAT(title,resume,released) LIKE :term');
+        $query->bindValue(':term', "%$term%");
+        $query->execute();
+        foreach ($query->fetchAll() as $line) {
+            $list[] = new Movie($line['title'], $line['resume'], new DateTime($line['released']), $line['duration'], $line['id']);
+        }
+        return $list;
+    }
 
 }
+
+

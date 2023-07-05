@@ -97,3 +97,29 @@ ___________________________
 2. La validation du POST de GenreController, on veut juste que le label ne soit pas vide
 	
 3. La validation du PATCH du GenreController
+
+
+_______________________
+# AngolarMovie dedier a cette projer pour partie :Front-end
+
+     **Champ de recherche (avec autocomplétion !)
+
+1. Côté symfony, dans le MovieRepository, créer une méthode search(string $term) qui va faire une requête pour récupérer juste les films (pas de jointure) dont le title ou le resume ou le released contient le terme recherché
+	
+2. Dans la partie contrôleur créer une nouvelle route sur /api/movie/search/{term} qui va lancer la méthode du repo qu'on vient de créer
+	
+3. Rajouter un test ou deux dans le MovieApiTest pour cette route, car on aime la qualité logicielle
+	
+4. Côté Angular, dans le MovieService, rajouter une nouvelle méthode search qui va faire appelle à la route symfony qu'on vient de créer
+	
+5. Générer un SearchComponent qu'on va afficher dans le AppComponent (comme ça on a la barre de recherche sur toutes les pages)
+	
+6. Dans ce component, on va avoir une propriété term en string initialisée vide qu'on va lier à un input
+	
+7. On va également avoir une propriété result de type Movie[] initialisée en tableau vide
+	
+8. Créer une méthode doSearch qui va lancer le search du service et assigné les data au results
+	
+9. Faire en sorte de lancer cette méthode quand on tape dans l'input
+	
+10. Faire du style pour que ça ressemble à une barre de recherche avec autocomplétion
